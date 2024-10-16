@@ -1,5 +1,8 @@
 <script setup>
   import { reactive } from 'vue';
+  import Cabecalho from './components/Cabecalho.vue';
+  import Formulario from './components/Formulario.vue';
+  import ListaDeTarefas from './components/ListaDeTarefas.vue';
 
   const estado = reactive({
 
@@ -21,7 +24,7 @@
     ],
   })
 
-  const getTarefasPendente = () => {
+  const getTarefasPendentes = () => {
     return estado.tarefas.filter(tarefa => !tarefa.concluida)
   }
 
@@ -34,7 +37,7 @@
 
     switch (filtro) {
       case 'pendentes':
-        return getTarefasPendente();
+        return getTarefasPendentes();
       case 'concluidas':
         return getTarefasConcluidas();
       default:
@@ -55,40 +58,10 @@
 
 <template>
   <div class="container">
-    <header class="p-5 mb-4 mt-4 bg-light rounded-3">
-      <h1>Minhas tarefas</h1>
-      <p>
-        Você possui {{ getTarefasPendente().length }} tarefas pendentes
-      </p>
-    </header>
-    <form @submit.prevent="cadastraTarefa">
-      <div class="row">
-        <div class="col">
-          <input :value="estado.tarefaTemp" @change="evento => estado.tarefaTemp = evento.target.value" required type="text" placeholder="Digite aqui a descrição da tarefa" class="form-control">
-        </div>
-        <div class="col-md-2">
-          <button type="submit" class="btn btn-primary">Cadastrar</button>
-        </div>
-        <div class="col-md-2">
-            <select @change="evento => estado.filtro = evento.target.value" class="form-control">
-            <option value="todas">Todas tarefas</option>
-            <option value="pendentes">pendentes</option>
-            <option value="concluidas">Finalizadas</option>
-          </select>
-        </div>
-      </div>
-    </form>
-    <ul class="list-group mt-4">
-      <li class="list-group-item" v-for="(tarefa, index) in getTarefasFiltradas()" :key="index">
-        <input @change="evento => tarefa.concluida = evento.target.checked" :checked="tarefa.concluida" type="checkbox">
-        <label :class="{ done: tarefa.concluida }" class="ms-3" for="">
-          {{ tarefa.descricao}}
-        </label>
-      </li>
-    </ul>
+    <Cabecalho :tarefas-pendentes="getTarefasPendentes().length" />
+    <Formulario />
+    <ListaDeTarefas />
   </div>
-  
-  
 </template>
 
 <style scoped>
@@ -96,4 +69,3 @@
     text-decoration: line-through;
   }
 </style>
-a
